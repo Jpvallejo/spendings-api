@@ -7,6 +7,10 @@ const userRoutes = require("./routes/User");
 const loginRoutes = require("./routes/Login");
 const accountRoutes = require("./routes/Account");
 const transactionsRoutes = require("./routes/Transactions");
+const creditCardRoutes = require("./routes/CreditCard");
+const categoryRoutes = require("./routes/Category");
+const budgetRoutes = require("./routes/Budget");
+const creditCardExpenseRoutes = require("./routes/CreditCardExpense");
 /* Creates an Express application.
    The express() function is a top-level
    function exported by the express module.
@@ -27,6 +31,10 @@ app.use("/user", userRoutes);
 app.use("/login", loginRoutes);
 app.use("/account", verifyToken, accountRoutes);
 app.use("/transactions", verifyToken, transactionsRoutes);
+app.use("/credit-card", verifyToken, creditCardRoutes);
+app.use("/budget", verifyToken, budgetRoutes);
+app.use("/category", verifyToken, categoryRoutes);
+app.use("/credit-card-expense", verifyToken, creditCardExpenseRoutes);
 
 // Require the Routess API
 // Create a Server and run it on the port 3000
