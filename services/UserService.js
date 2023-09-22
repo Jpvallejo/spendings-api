@@ -2,12 +2,9 @@ const connectionPool = require("../database/postgres");
 class UserService {
   getUser(req) {
     return new Promise((resolve, reject) => {
-      connectionPool.connect((err, db) => {
-        if (err) reject(err);
-        db.query("Select * from users").then((testData) => {
-          console.log(testData);
-          resolve(testData.rows);
-        });
+      connectionPool.query("Select * from users").then((testData) => {
+        console.log(testData);
+        resolve(testData.rows);
       });
     });
   }
@@ -37,11 +34,8 @@ class UserService {
     `;
 
     return new Promise((resolve, reject) => {
-      connectionPool.connect((err, db) => {
-        if (err) reject(err);
-        db.query(query).then((testData) => {
-          resolve("created");
-        });
+      connectionPool.query(query).then((testData) => {
+        resolve("created");
       });
     });
   }

@@ -1,4 +1,4 @@
-const CreditCardService = require("../services/CreditCard");
+const CreditCardService = require("../services/CreditCardService");
 
 function getCards(request, response) {
   const service = new CreditCardService();

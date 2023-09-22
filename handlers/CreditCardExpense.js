@@ -1,9 +1,9 @@
 const CreditCardExpenseService = require("../services/CreditCardExpenseService");
 
-function getCreditCardExpense(request, response) {
+function getExpense(request, response) {
   const service = new CreditCardExpenseService();
   service
-    .getCreditCardExpense(request)
+    .getExpense(request)
     .then((res) => {
       response.send(res);
     })
@@ -12,10 +12,10 @@ function getCreditCardExpense(request, response) {
     });
 }
 
-function createCreditCardExpense(request, response) {
+function createExpense(request, response) {
   const service = new CreditCardExpenseService();
   service
-    .createCreditCardExpense(request)
+    .createExpense(request)
     .then((res) => {
       response.send(res);
     })
@@ -24,10 +24,10 @@ function createCreditCardExpense(request, response) {
     });
 }
 
-function editCreditCardExpense(request, response) {
+function editExpense(request, response) {
   const service = new CreditCardExpenseService();
   service
-    .editCreditCardExpense(request)
+    .editExpense(request)
     .then((res) => {
       response.send(res);
     })
@@ -35,10 +35,10 @@ function editCreditCardExpense(request, response) {
       response.status(400).send({ message: error.message });
     });
 }
-function deleteCreditCardExpense(request, response) {
+function deleteExpense(request, response) {
   const service = new CreditCardExpenseService();
   service
-    .deleteCreditCardExpense(request)
+    .deleteExpense(request)
     .then((res) => {
       response.send(res);
     })
@@ -48,8 +48,8 @@ function deleteCreditCardExpense(request, response) {
 }
 
 module.exports = {
-  getCreditCardExpense,
-  createCreditCardExpense,
-  editCreditCardExpense,
-  deleteCreditCardExpense,
+  getExpense,
+  createExpense,
+  editExpense,
+  deleteExpense,
 };

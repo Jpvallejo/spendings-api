@@ -2,14 +2,11 @@ const connectionPool = require("../database/postgres");
 class AccountService {
   getCards(req) {
     return new Promise((resolve, reject) => {
-      connectionPool.connect((err, db) => {
-        if (err) reject(err);
-        db.query(`Select * from CreditCards where UserId = '${req.user.id}'`).then(
-          (testData) => {
-            resolve(testData.rows);
-          }
-        );
-      });
+      connectionPool
+        .query(`Select * from CreditCards where UserId = '${req.user.id}'`)
+        .then((testData) => {
+          resolve(testData.rows);
+        });
     });
   }
 
@@ -38,12 +35,14 @@ class AccountService {
     `;
 
     return new Promise((resolve, reject) => {
-      connectionPool.connect((err, db) => {
-        if (err) reject(err);
-        db.query(query).then((testData) => {
+      connectionPool
+        .query(query)
+        .then((testData) => {
           resolve("created");
+        })
+        .catch((error) => {
+          reject(error);
         });
-      });
     });
   }
 }

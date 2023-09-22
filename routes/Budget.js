@@ -9,7 +9,7 @@ const {
 } = require("../handlers/Budget");
 
 router.get("/:id", getBudget);
-router.get("/", getAllBudgets);
+// router.get("/", getAllBudgets);
 router.post("/", createBudget);
 router.delete("/:id", deleteBudget);
 router.put("/:id", editBudget);

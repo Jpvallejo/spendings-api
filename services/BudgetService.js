@@ -2,14 +2,11 @@ const connectionPool = require("../database/postgres");
 class BudgetService {
   getBudget(req) {
     return new Promise((resolve, reject) => {
-      connectionPool.connect((err, db) => {
-        if (err) reject(err);
-        db.query(`Select * from Budgets where UserId = '${req.user.id}'`).then(
-          (testData) => {
-            resolve(testData.rows);
-          }
-        );
-      });
+      connectionPool
+        .query(`Select * from Budgets where UserId = '${req.user.id}'`)
+        .then((testData) => {
+          resolve(testData.rows);
+        });
     });
   }
 
@@ -34,11 +31,8 @@ class BudgetService {
     `;
 
     return new Promise((resolve, reject) => {
-      connectionPool.connect((err, db) => {
-        if (err) reject(err);
-        db.query(query).then((testData) => {
-          resolve("created");
-        });
+      connectionPool.query(query).then((testData) => {
+        resolve("created");
       });
     });
   }
@@ -49,11 +43,8 @@ class BudgetService {
     `;
 
     return new Promise((resolve, reject) => {
-      connectionPool.connect((err, db) => {
-        if (err) reject(err);
-        db.query(query).then((testData) => {
-          resolve("Removed Correctly");
-        });
+      connectionPool.query(query).then((testData) => {
+        resolve("Removed Correctly");
       });
     });
   }
@@ -71,11 +62,8 @@ class BudgetService {
     `;
 
     return new Promise((resolve, reject) => {
-      connectionPool.connect((err, db) => {
-        if (err) reject(err);
-        db.query(query).then((testData) => {
-          resolve("Edited Correctly");
-        });
+      connectionPool.query(query).then((testData) => {
+        resolve("Edited Correctly");
       });
     });
   }

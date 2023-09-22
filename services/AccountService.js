@@ -2,15 +2,12 @@ const connectionPool = require("../database/postgres");
 class AccountService {
   getAccount(req) {
     return new Promise((resolve, reject) => {
-      connectionPool.connect((err, db) => {
-        if (err) reject(err);
-        db.query(`Select * from accounts where UserId = '${req.user.id}'`).then(
-          (testData) => {
-            console.log(testData);
-            resolve(testData.rows);
-          }
-        );
-      });
+      connectionPool
+        .query(`Select * from accounts where UserId = '${req.user.id}'`)
+        .then((testData) => {
+          console.log(testData);
+          resolve(testData.rows);
+        });
     });
   }
 
@@ -33,11 +30,8 @@ class AccountService {
     `;
 
     return new Promise((resolve, reject) => {
-      connectionPool.connect((err, db) => {
-        if (err) reject(err);
-        db.query(query).then((testData) => {
-          resolve("created");
-        });
+      connectionPool.query(query).then((testData) => {
+        resolve("created");
       });
     });
   }

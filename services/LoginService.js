@@ -23,14 +23,11 @@ class LoginService {
     `;
 
     return new Promise((resolve, reject) => {
-      connectionPool.connect((err, db) => {
-        if (err) reject(err);
-        db.query(query).then((testData) => {
-          if (testData.rowCount === 0) {
-            reject({ message: "Email or Password is incorrect" });
-          }
-          resolve(generateToken(testData.rows[0]));
-        });
+      connectionPool.query(query).then((testData) => {
+        if (testData.rowCount === 0) {
+          reject({ message: "Email or Password is incorrect" });
+        }
+        resolve(generateToken(testData.rows[0]));
       });
     });
   }

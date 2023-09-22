@@ -2,14 +2,11 @@ const connectionPool = require("../database/postgres");
 class CategoryService {
   getCategory(req) {
     return new Promise((resolve, reject) => {
-      connectionPool.connect((err, db) => {
-        if (err) reject(err);
-        db.query(
-          `Select * from Categories where UserId = '${req.user.id}'`
-        ).then((testData) => {
+      connectionPool
+        .query(`Select * from Categories where UserId = '${req.user.id}'`)
+        .then((testData) => {
           resolve(testData.rows);
         });
-      });
     });
   }
 
@@ -30,11 +27,8 @@ class CategoryService {
     `;
 
     return new Promise((resolve, reject) => {
-      connectionPool.connect((err, db) => {
-        if (err) reject(err);
-        db.query(query).then((testData) => {
-          resolve("created");
-        });
+      connectionPool.query(query).then((testData) => {
+        resolve("created");
       });
     });
   }
@@ -45,11 +39,8 @@ class CategoryService {
     `;
 
     return new Promise((resolve, reject) => {
-      connectionPool.connect((err, db) => {
-        if (err) reject(err);
-        db.query(query).then((testData) => {
-          resolve("Removed Correctly");
-        });
+      connectionPool.query(query).then((testData) => {
+        resolve("Removed Correctly");
       });
     });
   }
@@ -65,11 +56,8 @@ class CategoryService {
     `;
 
     return new Promise((resolve, reject) => {
-      connectionPool.connect((err, db) => {
-        if (err) reject(err);
-        db.query(query).then((testData) => {
-          resolve("Edited Correctly");
-        });
+      connectionPool.query(query).then((testData) => {
+        resolve("Edited Correctly");
       });
     });
   }
