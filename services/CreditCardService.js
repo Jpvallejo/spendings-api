@@ -26,14 +26,14 @@ class AccountService {
         '${req.body.brand}',
         '${req.body.name}',
         '${req.body.account}',
-        '${req.body.closingDate}',
+        ${req.body.closingDate ?? null},
         '${req.body.dueDate}',
         '${req.body.limit}',
         '${req.body.initialDebt}',
         '${req.user.id}'
     )
     `;
-
+console.log(query);
     return new Promise((resolve, reject) => {
       connectionPool
         .query(query)

@@ -1,4 +1,5 @@
 const connectionPool = require("../database/postgres");
+const { getInvoiceMonth } = require("../utils/invoiceDateUtil");
 class CreditCardExpenseService {
   getExpense(req) {
     return new Promise((resolve, reject) => {
@@ -16,6 +17,8 @@ class CreditCardExpenseService {
   }
 
   async createExpense(req) {
+    const card = await getCurrentCard(req.body.cardId);
+    const invoiceData = getInvoiceMonth(req.body.date, card);
     const query = `
     INSERT INTO CreditCardExpenses (
       categoryid
@@ -24,6 +27,8 @@ class CreditCardExpenseService {
       ,currency
       ,cardid
       ,description
+      ,invoicemonth
+      ,invoiceyear
       ,installmentnumber)
     VALUES
     (
@@ -33,12 +38,16 @@ class CreditCardExpenseService {
         '${req.body.currency}',
         '${req.body.cardId}',
         '${req.body.description}',
+        '${invoiceData.month}',
+        '${invoiceData.year}',
         '${req.body.installmentNumber}'
     )
     `;
-    const card = await getCurrentCard(req.body.cardId);
     console.log(card);
     return new Promise((resolve, reject) => {
+      if(card.cardlimit < card.debt + req.body.amount) {
+        reject({message: "The limit exceeds the amount of the record"})
+      }
       connectionPool
         .query(query)
         .then((testData) => {
@@ -124,9 +133,8 @@ const getCurrentCard = (id) => {
   console.log(id);
   return new Promise((resolve, reject) => {
     connectionPool
-      .query(`Select id,debt from CreditCards where Id = '${id}'`)
+      .query(`Select id,debt,dueDate, cardlimit from CreditCards where Id = '${id}'`)
       .then((data) => {
-        console.log("aca 3");
 
         resolve(data.rows[0]);
       });

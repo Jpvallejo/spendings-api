@@ -2,6 +2,7 @@
 
 const express = require("express");
 require("dotenv").config();
+const cors = require("cors");
 
 const userRoutes = require("./routes/User");
 const loginRoutes = require("./routes/Login");
@@ -16,6 +17,7 @@ const creditCardExpenseRoutes = require("./routes/CreditCardExpense");
    function exported by the express module.
 */
 const app = express();
+app.use(cors());
 
 /* To handle the HTTP Methods Body Parser
 is used, Generally used to extract the
@@ -35,10 +37,9 @@ app.use("/credit-card", verifyToken, creditCardRoutes);
 app.use("/budget", verifyToken, budgetRoutes);
 app.use("/category", verifyToken, categoryRoutes);
 app.use("/credit-card-expense", verifyToken, creditCardExpenseRoutes);
-
 // Require the Routess API
 // Create a Server and run it on the port 3000
-const server = app.listen(3000, function () {
+const server = app.listen(4000, function () {
   let host = server.address().address;
   let port = server.address().port;
   // Starting the Server at the port 3000

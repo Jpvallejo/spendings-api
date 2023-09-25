@@ -26,6 +26,7 @@ class LoginService {
       connectionPool.query(query).then((testData) => {
         if (testData.rowCount === 0) {
           reject({ message: "Email or Password is incorrect" });
+          return
         }
         resolve(generateToken(testData.rows[0]));
       });

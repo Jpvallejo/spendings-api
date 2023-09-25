@@ -11,6 +11,18 @@ function getTransactions(request, response) {
       response.status(400).send({ message: error.message });
     });
 }
+function getByCategory(request, response) {
+  const service = new TransactionsService();
+  console.log('hgola')
+  service
+    .getByCategory(request)
+    .then((res) => {
+      response.send(res);
+    })
+    .catch((error) => {
+      response.status(400).send({ message: error.message });
+    });
+}
 
 function createTransaction(request, response) {
   const service = new TransactionsService();
@@ -49,6 +61,7 @@ function deleteTransaction(request, response) {
 
 module.exports = {
   getTransactions,
+  getByCategory,
   createTransaction,
   editTransaction,
   deleteTransaction,
