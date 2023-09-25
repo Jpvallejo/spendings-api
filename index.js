@@ -5,7 +5,7 @@ require("dotenv").config();
 const cors = require("cors");
 
 const userRoutes = require("./routes/User");
-const loginRoutes = require("./routes/Login");
+const {loginRouter, registerRouter} = require("./routes/Login");
 const accountRoutes = require("./routes/Account");
 const transactionsRoutes = require("./routes/Transactions");
 const creditCardRoutes = require("./routes/CreditCard");
@@ -30,7 +30,8 @@ app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ extended: false, limit: "50mb" }));
 
 app.use("/user", userRoutes);
-app.use("/login", loginRoutes);
+app.use("/login", loginRouter);
+app.use("/sign-up", registerRouter);
 app.use("/account", verifyToken, accountRoutes);
 app.use("/transactions", verifyToken, transactionsRoutes);
 app.use("/credit-card", verifyToken, creditCardRoutes);

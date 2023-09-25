@@ -104,7 +104,6 @@ class TransactionsService {
       req.query.year,
       req.user.id
     );
-
     return new Promise((resolve, reject) => {
       connectionPool
         .query(
@@ -130,7 +129,9 @@ class TransactionsService {
           JOIN categories on categories.id = t.categoryId`
         )
         .then((testData) => {
-          resolve(getExtendedList(testData.rows, cardExpenses));
+          if (testData.rowCount > 0)
+            resolve(getExtendedList(testData.rows, cardExpenses));
+          else resolve([]);
         });
     });
   }
@@ -155,6 +156,7 @@ const getCardExpensesByCategory = (month, year, userId) => {
           `;
   return new Promise((resolve, reject) => {
     connectionPool.query(query).then((data) => {
+      if (data.rowCount == 0) resolve([]);
       resolve(
         data.rows.map((record) => {
           return {
