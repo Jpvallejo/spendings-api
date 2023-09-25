@@ -69,7 +69,6 @@ class TransactionsService {
             account = data.rows[0];
           });
         connectionPool.query(query).then((testData) => {
-          console.log(testData);
           let newAmount = req.body.amount;
           if (account.currency !== req.body.currency) {
             newAmount = newAmount * req.body.currencyValuation;
@@ -100,14 +99,11 @@ class TransactionsService {
       parseInt(req.query.month),
       0
     );
-    console.log("1111111");
     const cardExpenses = await getCardExpensesByCategory(
       req.query.month,
       req.query.year,
       req.user.id
     );
-    console.log(cardExpenses);
-    console.log("22222222");
 
     return new Promise((resolve, reject) => {
       connectionPool
@@ -134,8 +130,6 @@ class TransactionsService {
           JOIN categories on categories.id = t.categoryId`
         )
         .then((testData) => {
-          console.log(testData.rows);
-          console.log(cardExpenses);
           resolve(getExtendedList(testData.rows, cardExpenses));
         });
     });
@@ -159,7 +153,6 @@ const getCardExpensesByCategory = (month, year, userId) => {
                         categoryId)t
           JOIN categories on categories.id = t.categoryId
           `;
-          console.log(query)
   return new Promise((resolve, reject) => {
     connectionPool.query(query).then((data) => {
       resolve(
@@ -176,9 +169,11 @@ const getCardExpensesByCategory = (month, year, userId) => {
 
 const getExtendedList = (transactions, cardExpenses) => {
   const categoriesIds = transactions.map((x) => x.id);
-  const extraExpenses = cardExpenses.filter(
-    (x) => !categoriesIds.includes(x.id)
-  );
+  const extraExpenses = cardExpenses
+    .filter((x) => !categoriesIds.includes(x.id))
+    .map((x) => {
+      return { ...x, amount: Number(x.amount.replace(/[^0-9.-]+/g, "")) };
+    });
 
   const addedAmounts = transactions.map((x) => {
     let extraAmount = 0;
@@ -192,6 +187,25 @@ const getExtendedList = (transactions, cardExpenses) => {
       amount: amount + extraAmount,
     };
   });
-  return [...addedAmounts, ...extraExpenses];
+  const finalArray = [...addedAmounts, ...extraExpenses];
+
+  const sumExpenses = finalArray
+    .filter((x) => x.type === "Expense")
+    .reduce((a, b) => {
+      return a + b.amount;
+    }, 0);
+  const sumIncomes = finalArray
+    .filter((x) => x.type === "Income")
+    .reduce((a, b) => {
+      return a + b.amount;
+    }, 0);
+  return finalArray.map((x) => {
+    return {
+      ...x,
+      percent: Math.round(
+        (x.amount * 100) / (x.type === "Expense" ? sumExpenses : sumIncomes)
+      ),
+    };
+  });
 };
 module.exports = TransactionsService;

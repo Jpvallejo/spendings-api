@@ -23,5 +23,16 @@ function createAccount(request, response) {
       response.status(400).send({ message: error.message });
     });
 }
+function getAccountForecast(request, response) {
+  const service = new AccountService();
+  service
+    .getAccountForecast(request)
+    .then((res) => {
+      response.send(res);
+    })
+    .catch((error) => {
+      response.status(400).send({ message: error.message });
+    });
+}
 
-module.exports = { getAccount, createAccount };
+module.exports = { getAccount, createAccount, getAccountForecast };

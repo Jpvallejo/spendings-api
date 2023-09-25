@@ -43,10 +43,9 @@ class CreditCardExpenseService {
         '${req.body.installmentNumber}'
     )
     `;
-    console.log(card);
     return new Promise((resolve, reject) => {
-      if(card.cardlimit < card.debt + req.body.amount) {
-        reject({message: "The limit exceeds the amount of the record"})
+      if (card.cardlimit < card.debt + req.body.amount) {
+        reject({ message: "The limit exceeds the amount of the record" });
       }
       connectionPool
         .query(query)
@@ -65,25 +64,26 @@ class CreditCardExpenseService {
     DELETE FROM CreditCardExpenses WHERE id = '${req.params.id}'
     `;
     const expense = await getCurrentExpense(req.params.id);
-    console.log(1);
-    const card = await getCurrentCard(req.body.cardId);
-    console.log(2);
-    return new Promise((resolve, reject) => {
-      if (!expense) {
-        reject({ message: "The expense does not exist" });
-      }
-      connectionPool
-        .query(query)
-        .then((testData) => {
-          console.log("here");
-          const amount = -Number(expense.amount.replace(/[^0-9.-]+/g, ""));
-          updateCardDebt(amount, card);
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (!expense) {
+          reject({ message: "The expense does not exist" });
+        }
+        const card = await getCurrentCard(expense.cardid);
+        connectionPool
+          .query(query)
+          .then((testData) => {
+            const amount = -Number(expense.amount.replace(/[^0-9.-]+/g, ""));
+            updateCardDebt(amount, card);
 
-          resolve("Removed Correctly");
-        })
-        .catch((error) => {
-          reject(error);
-        });
+            resolve("Removed Correctly");
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      } catch {
+        reject({ message: "There was an error" });
+      }
     });
   }
 
@@ -122,7 +122,7 @@ const getCurrentExpense = (id) => {
   return new Promise((resolve, reject) => {
     connectionPool
       .query(
-        `Select id,amount, currency from CreditCardExpenses where Id = '${id}'`
+        `Select id,amount, currency, cardId from CreditCardExpenses where Id = '${id}'`
       )
       .then((data) => {
         resolve(data.rows[0]);
@@ -130,18 +130,17 @@ const getCurrentExpense = (id) => {
   });
 };
 const getCurrentCard = (id) => {
-  console.log(id);
   return new Promise((resolve, reject) => {
     connectionPool
-      .query(`Select id,debt,dueDate, cardlimit from CreditCards where Id = '${id}'`)
+      .query(
+        `Select id,debt,dueDate, cardlimit from CreditCards where Id = '${id}'`
+      )
       .then((data) => {
-
         resolve(data.rows[0]);
       });
   });
 };
 const updateCardDebt = (amount, card) => {
-  // console.log(card);
   const newDebt = Number(card.debt.replace(/[^0-9.-]+/g, "")) + amount;
   connectionPool
     .query(`Update CreditCards set debt ='${newDebt}' where Id = '${card.id}'`)

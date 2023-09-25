@@ -33,7 +33,6 @@ class AccountService {
         '${req.user.id}'
     )
     `;
-console.log(query);
     return new Promise((resolve, reject) => {
       connectionPool
         .query(query)

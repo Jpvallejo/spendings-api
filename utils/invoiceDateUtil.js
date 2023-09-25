@@ -3,8 +3,6 @@ const getInvoiceMonth = (date, card) => {
   let year = dateArr[0];
   let month = dateArr[1];
   const day = dateArr[2];
-    console.log(card);
-    console.log(card.duedate);
   const dueDate = new Date(year, month, card.duedate);
   const dayOfWeek = dueDate.getDay();
   if (dayOfWeek == 0 || dayOfWeek == 6) {
@@ -13,17 +11,13 @@ const getInvoiceMonth = (date, card) => {
   }
   var dateOffset = 24 * 60 * 60 * 1000 * 10; //10 days
   const closingDate = new Date(dueDate.getTime() - dateOffset);
-  console.log(closingDate);
   const nextThursday = getNextThursday(closingDate);
-  console.log(nextThursday);
   const previousThursday = getPrevThursday(closingDate);
-  console.log(previousThursday);
   const distanceToNext = daysDistance(closingDate, nextThursday);
   const distanceToPrev = daysDistance(closingDate, previousThursday);
   const calculatedClosingDate =
     distanceToNext >= distanceToPrev ? nextThursday : previousThursday;
 
-  console.log(calculatedClosingDate);
   const closingDay = calculatedClosingDate.getDate();
   if (day > closingDay) {
     if (month === 12) {

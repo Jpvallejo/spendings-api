@@ -2,9 +2,8 @@ const connectionPool = require("../database/postgres");
 class UserService {
   getUser(req) {
     return new Promise((resolve, reject) => {
-      connectionPool.query("Select * from users").then((testData) => {
-        console.log(testData);
-        resolve(testData.rows);
+      connectionPool.query("Select * from users").then((data) => {
+        resolve(data.rows);
       });
     });
   }

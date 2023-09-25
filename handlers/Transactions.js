@@ -13,7 +13,6 @@ function getTransactions(request, response) {
 }
 function getByCategory(request, response) {
   const service = new TransactionsService();
-  console.log('hgola')
   service
     .getByCategory(request)
     .then((res) => {
